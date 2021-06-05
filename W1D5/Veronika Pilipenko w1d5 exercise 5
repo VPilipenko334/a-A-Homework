@@ -1,0 +1,116 @@
+# accept any num of arrays same length as arg
+# array_1 = ['a', 'b', 'c']
+# array_2 = [1, 2, 3]
+# arr = [['a','b','c'], [1,2,3]]
+
+def zip(*arr)
+    new_array = Array.new(arr[0].length) {Array.new(arr.length)}# Array.new(3) {Array.new(3)}
+    # new_array = [] # [a, b, c, 1, 2, 3]
+
+    arr.each_with_index do |subarray, idx1| # [a,b,c], 0
+        subarray.each_with_index do |ele, idx2| # b, 1
+            new_array[idx2][idx1] = ele # new_array[1][0] = b
+        end
+    end
+
+    # [[a, 1], [b, 2], [c, 3]]
+
+    new_array
+end
+
+# should accept arr/ 2 procs as arg 
+# returns new arr 
+# true for EXACTLY one of the procs 
+# returns elements in order as inpt arr
+
+# iterate through the array using .each method
+# if/ else testing out 
+
+
+def prizz_proc(arr, prc_1, prc_2)
+    new_array = []
+
+    arr.each do |ele|
+        if !(prc_1.call(ele) && prc_2.call(ele)) && (prc_1.call(ele) || prc_2.call(ele))
+            new_array << ele
+        end
+    end
+    new_array 
+end
+
+#[10, 9, 3, 45, 12, 15, 7], --> 10, 9, 3, 12])
+# i % 3 == 0 && i % 5 == 0 
+
+# similar to zip but arrays are not the same length
+# if an array is too short, the index should be nil
+# 
+
+
+# array_3 = [11,    13,     15,     17]
+# array_2 = [1,     2,      3          ]
+# array_1 = ['a',   'b', '   c'        ]
+
+def zany_zip(*arr)
+    
+    n = zany_helper(*arr)
+    
+    new_array = Array.new(n) {Array.new(arr.length)}# Array.new(3) {Array.new(3)}
+    # new_array = [] # [a, b, c, 1, 2, 3]
+
+    arr.each_with_index do |subarray, idx1| # [a,b,c], 0
+        subarray.each_with_index do |ele, idx2| # b, 1
+            new_array[idx2][idx1] = ele # new_array[1][0] = b
+        end
+    end
+
+    # [[a, 1], [b, 2], [c, 3]]
+
+    new_array
+
+
+end
+
+def zany_helper(*arr)
+
+   new_arr = []
+   arr.each { |ele| new_arr << ele.length}
+
+    new_arr.max
+end
+
+
+# array_1 = ['a', 'b', 'c'] 
+# array_2 = [1, 2, 3] 
+# array_3 = [11, 13, 15, 17] 
+# array_4 = ['v', 'w', 'x', 'y', 'z'] 
+
+# p zany_helper(array_1, array_2, array_3, array_4)
+
+# #new_array = Array.new(5) {Array.new(arr.length)}
+
+
+
+# highest_result = 25 < 1
+# call the proc on each element in the array
+# 
+
+
+# max function on the array to get the highest result
+
+
+def maximum(arr, &prc)
+    highest_result = 0
+
+    arr.each_with_index do |ele, idx| # 2, 0
+        if prc.call(ele) > highest_result # 4 > 0
+            highest_result = prc.call(ele) 
+        else
+            return arr[idx - 1]
+        end
+    end
+
+end
+# [2, 4, -5, 1]
+# [4, 16, 25, 1] # 25, 2
+# indexes of the highest result [2]
+# return arr[highest result index] = arr[2]
