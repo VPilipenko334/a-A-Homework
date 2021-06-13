@@ -26,10 +26,22 @@ def gold_cat_toys
   # Find all the toys that are `Gold` in color and have more than one word in
   # the name.
 
+
+  #what are we selecting? what is this returning us?
+  
   # Sort the toys by name alphabetically.
 
   execute(<<-SQL)
-
+  select  
+    toys.name
+  from
+    toys 
+  where
+    toys.color = 'Gold' 
+  and
+    toys.name like '% %'
+  order by
+  toys.name asc;
   SQL
 end
 
@@ -39,8 +51,16 @@ def extra_jet_toys
   # with the same name.
   # Sort the toys by name alphabetically.
 
+  #jet's toys WITH same name AND number of toys with the same name // order alphabetically 
   execute(<<-SQL)
+    SELECT 
+      toys.name COUNT(*)
+    FROM 
+      toys.name 
+    WHERE 
 
+
+  
   SQL
 end
 
