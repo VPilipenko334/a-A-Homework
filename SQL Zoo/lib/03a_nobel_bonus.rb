@@ -27,7 +27,7 @@ def physics_no_chemistry
         subject = 'Physics'
       )
 AND
-  subject = 'Chemistry'
+  subject = 'Chemistry';
 
   SQL
 end
