@@ -13,6 +13,21 @@ def physics_no_chemistry
   # but no Chemistry prize?
   execute(<<-SQL)
 
-  
+  SELECT 
+    yr
+  FROM 
+    nobels 
+  WHERE 
+    yr IN (
+      SELECT 
+        yr
+      FROM 
+        nobels 
+      WHERE 
+        subject = 'Physics'
+      )
+AND
+  subject = 'Chemistry'
+
   SQL
 end
