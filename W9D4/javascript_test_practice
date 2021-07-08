@@ -1,0 +1,558 @@
+
+// Write a function `titleize(str)` that capitalizes each word in a string like
+// a book title. 
+// Do not capitalize the following words (unless they are the first word in the 
+// string): ["a", "and", "of", "over", "the"]
+
+
+// we will have to capitalize everything at index 0 except smallWords
+// everything after index 0, will be lowercase
+
+
+// 1. create an array for smallWords 
+// 2. split the str to create it into an array (.split)
+// 3. create a new array for your final string which you will later (.join) back into a string 
+// 4. iterate through the words arr with forEach grabbing the element and idx
+// 5. if the word is NOT included in smallWords and the index is 0 --> capitalized
+// 6. we push in the word sliced at (0, 1) uppercase because it's EXCLUSIVE +
+//      word.slice(1) to lowercase 
+// 7. else, we push the rest of the word to lowercase
+// 8. join the arrays at the end 
+
+
+function titleize(str) {
+
+    let smallWords = ["a", "and", "of", "over", "the"];
+
+    words = str.split(' ');
+    let newArr = [];
+
+    words.forEach((word, idx) => {
+        if (!smallWords.includes(word) || idx === 0) {
+            newArr.push(word.slice(0, 1).toUpperCase() + word.slice(1).toLowerCase());
+        } else {
+            newArr.push(word.toLowerCase());
+        }
+    });
+
+    return newArr.join(' ');
+
+}
+
+
+// -----------------------------------------------------------------------------
+
+// Write a function, `anagrams(str1, str2)`, that takes in two words and returns 
+// a boolean indicating whether or not the words are anagrams. Anagrams are 
+// words that contain the same characters but not necessarily in the same order. 
+// Solve this without using Array.prototype.sort.
+// 
+// Examples:
+// anagrams('listen', 'silent') => true
+// anagrams('listen', 'potato') => false
+
+
+// returns a boolean 
+// they contain the same chars but not in the same order 
+
+
+// 1. create a variable and equal it to true
+// 2. if the strings are NOT the same lenght, it's false 
+// 3. .slit --> create the strings into arrays 
+// 4. iterate through each string and see if the other contains the letter 
+// 5. if str2 doesnt include the letter, check false 
+// 6. do the same thing with str1, check false 
+// 7. otherwise, return true 
+
+
+function anagrams(str1, str2) {
+
+    let check = true;
+
+    if (str1.length !== str2.length) check = false;
+
+    str1.split('').forEach(letter => {
+        if (!str2.includes(letter)) check = false; 
+    });
+
+    str2.split('').forEach(letter => {
+        if (!str1.includes(letter)) check = false; 
+    })
+
+    return check; 
+
+}
+
+// -----------------------------------------------------------------------------
+
+// Write a `String.prototype.symmetricSubstrings` method that returns an array
+// of substrings which are palindromes in alphabetical order. Only include 
+// substrings of length > 1.
+// e.g. "cool".symmetricSubstrings() => ["oo"]
+
+
+// returns an array 
+// strings that are palindromes (same forwards and backwards)
+// sorted (in alphabetical order)
+// substrings of length > 1
+
+// 1. create an empty arr 
+// 2. make a nested loop -- iterating through substrings 
+  // one has to start at regular; .length - 1 so we do not step out of bounds
+// 3. second loop will take i + 1 because of the substring, the char and whatever
+//      is next to it. 
+
+String.prototype.symmetricSubstrings = function () {
+
+    let array = [];
+
+    for (let i = 0; i < this.length - 1; i++) {
+        for (let j = i + 1; j < this.length; j++) {
+
+            let substring = this.slice(i, j + 1);
+            let reversed = substring.split('').reverse().join(''); // MAKE SURE YOU DO SUBSTRING.SPLIT
+
+            if (substring === reversed) array.push(substring);
+
+        }
+    }
+    return array.sort();
+};
+
+
+// -----------------------------------------------------------------------------
+
+// Write a `String.prototype.realWordsInString(dictionary)` method, that returns
+// an array containing the substrings of `string` that appear in `dictionary`.
+// sorted alphabetically. This method does NOT return any duplicates.
+
+
+// returns an array 
+// containing substrings of 'string' that appear in the dictionary 
+
+String.prototype.realWordsInString = function (dictionary) {
+
+    let array = [];
+
+    dictionary.forEach(word => {
+        if (this.includes(word)) array.push(word);
+    });
+
+    return array.sort();
+}
+
+
+
+// -----------------------------------------------------------------------------
+
+
+// Write an `Array.prototype.mergeSort` method that merge sorts an array. It
+// should take an optional callback that compares two elements, returning -1 if 
+// the first element should appear before the second, 0 if they are equal, and 1 
+// if the first element should appear after the second. Define and use a helper 
+// method, `merge(left, right, comparator)`, to merge the halves. 
+//
+// **IMPORTANT: Make sure to use a function declaration (`function merge`) as
+// opposed to a function expression (`const merge = function`) for `merge`. Do
+// NOT use the built-in `Array.prototype.sort` method in your implementation.**
+//
+// Here's a summary of the merge sort algorithm:
+//
+// Split the array into left and right halves, then merge sort them recursively
+// until a base case is reached. Use a helper method, merge, to combine the
+// halves in sorted order, and return the merged array.
+
+
+
+// breaking up an array and then putting it back together 
+// splitting array into left and right halves
+// merge recursively until base case is reached 
+
+// helper method: combine the halves in sorted order && return the merged arr
+
+// optional callback 
+// returns -1 if el1 < el2
+// returns 0 if ele1 === ele2
+// return 1 if ele1 > ele2
+
+Array.prototype.mergeSort = function (callback) {
+
+    if (this.length < 2) return this;              //base case (returning the arr if it's less than 2 b/c it's already sorted)
+
+    if (!callback) callback = (left, right) => {
+        return left < right ? -1 : left > right ? 1 : 0;
+    };
+
+    const middle = Math.floor(this.length / 2);
+    const sortedLeft = this.slice(0, middle).mergeSort(callback);          // throwing the left side into the mergeSort function to be sorted (recursion)
+    const sortedRight = this.slice(middle).mergeSort(callback);
+    return merge(sortedLeft, sortedRight, callback);
+
+};
+
+
+function merge(left, right, comparator) {            // comparing ele of the arr, create a new arr to throw in sorted ele in
+
+    let sorted = [];
+
+    while (left.length && right.length) {              // once one is empty, you call them together 
+        switch (comparator(left[0], right[0])) {
+            case -1:                                          // callback will compare the first ele of the arrs
+                sorted.push(left.shift());
+                break;
+            case 1:
+                sorted.push(right.shift());
+                break;
+            case 0:
+                sorted.push(left.shift());
+                break;
+        }
+
+    }
+
+    return sorted.concat(left, right);
+
+}
+
+
+// -----------------------------------------------------------------------------
+
+// Write a recursive function, `binarySearch(sortedArray, target)`, that returns
+// the index of `target` in `sortedArray`, or -1 if it is not found. Do NOT use
+// the built-in `Array.prototype.indexOf` or `Array.prototype.includes` methods 
+// in your implementation.
+//
+// Here's a quick summary of the binary search algorithm:
+//
+// Start by looking at the middle item of the array. If it matches the target,
+// return its index. Otherwise, recursively search either the left or the right
+// half of the array until the target is found or the base case (empty array) is
+// reached.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write a function `myFind(array, callback)` that returns the first
+// element for which the callback returns true. If none is found, the 
+// function should return `undefined`
+// Do not use the built-in `Array.prototype.find` method.
+
+
+// returns the first element when the callback is true 
+// iterate through the array 
+
+function myFind(array, callback) {
+
+    for (i = 0; i < array.length; i++) {
+        if (callback(array[i])) return array[i];
+    }
+
+}
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write an `Array.prototype.twoSum` method, that finds all pairs of positions 
+// where the elements at those positions sum to zero.
+// NB: ordering matters. Each pair must be sorted with the smaller index
+// before bigger index. The array of pairs must be sorted
+// "dictionary-wise":
+
+// [0, 2] before [1, 2] (smaller first elements come first)
+// [0, 1] before [0, 2] (then smaller second elements come first)
+
+
+// find all pairs of positions where ele added equals 0
+// nested loop 
+// smaller index comes before larger index 
+
+
+// 1. create a new array 
+// 2. start iterating through your nested loop 
+    // first loop: this.length - 1 because you dont want to step out of bounds
+
+Array.prototype.twoSum = function (){
+
+    let array = [];
+
+    for (let i = 0; i < this.length - 1; i++) {
+        for (let j = (i + 1); j < this.length; j++) {
+            if (this[i] + this[j] === 0) array.push([i, j])
+        }
+    }
+
+    return array; 
+
+};
+
+// -----------------------------------------------------------------------------
+
+// Write an `Array.prototype.myJoin(separator)` method, which joins the elements
+// of an array into a string. If an argument is provided to `myJoin`, use that
+// between each element. Otherwise, use an empty string.
+// Do NOT call the built-in `Array.prototype.join` method.
+// ex.
+// [1, 2, 3].myJoin() => '123'
+// [1, 2, 3].myJoin('$') => '1$2$3'
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write an `Array.prototype.median` method that returns the median of elements
+// in an array. If the length is even, return the average of the middle two 
+// elements.
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write a function `myReverse(array)` which returns the array in reversed
+// order. Do NOT use the built-in `Array.prototype.reverse`.
+// ex. myReverse([1,2,3]) => [3,2,1]
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+
+// Write a `Function.prototype.myCall(context)` method, that accepts an object,
+// and any number of additional arguments. It should call the function with the
+// passed-in object as `this`, also passing the remaining arguments. Do NOT use
+// the built-in `Function.prototype.call` or `Function.prototype.apply` methods 
+// in your implementation.
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write a `Function.prototype.myApply(context, argsArr)` method that accepts an
+// object and an array of additional arguments. It should call the function with 
+// the passed-in object as `this`, also passing the arguments array. Do NOT use 
+// the built-in `Function.prototype.apply` or `Function.prototype.call` methods
+// in your implementation.
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write a `Function.prototype.myCurry(numArgs)` method that collects arguments
+// until the number of arguments collected is equal to the original `numArgs` 
+// value and then invokes the curried function.
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write a `Function.prototype.inherits(ParentClass)` method. It should extend
+// the methods of `ParentClass.prototype` to `ChildClass.prototype`.
+//
+// **Do NOT use `Object.create`, `Object.assign`, `Object.setPrototypeOf`, or
+// modify the `__proto__` property of any object directly.**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write a `Function.prototype.myBind(context)` method. It should return a copy
+// of the original function, where `this` is set to `context`. It should allow 
+// arguments to the function to be passed both at bind-time and call-time.
+// Note that you are NOT allowed to use ES6 arrow syntax for this problem.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write an `Array.prototype.myEach(callback)` method that invokes a callback
+// for every element in an array and returns undefined. Do NOT use the built-in
+// `Array.prototype.forEach`.
+
+
+// invokes a callback for EVERY element in arr
+
+
+
+Array.prototype.myEach = function (callback) {
+
+    for (let i = 0; i < this.length; i++) {
+        callback(this[i]);
+    }
+
+};
+
+
+// -----------------------------------------------------------------------------
+
+// Write an `Array.prototype.myEvery(callback)` method that returns true
+// if the callback returns true for every element in the array, and otherwise 
+// returns false. Use the `Array.prototype.myEach` method you defined above. Do 
+// NOT call the built-in `Array.prototype.every` or `Array.prototype.forEach` 
+// methods.
+
+
+// returns true if the callback returns true for EVERY ele in the arr
+// otherwise returns false 
+
+// set a defaul variable to false 
+// iterate through "this" and if callback returns all the elements to be true; 
+// change the variable to true 
+// return the variable 
+
+Array.prototype.myEvery = function (callback) {
+
+    let check = false; 
+
+    for (let )
+}
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write an `Array.prototype.myReject(callback)` method. Return a new array,
+// which contains only the elements for which the callback returns false. 
+// Use the `Array.prototype.myEach` method you defined above. Do NOT call the 
+// built-in `Array.prototype.filter` or `Array.prototype.forEach` methods.
+// ex.
+// [1,2,3].myReject( (el) => el > 2 ) => [1, 2]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write an `Array.prototype.mySome(callback)` method which takes a callback
+// and returns true if the callback returns true for ANY element in the array. 
+// Otherwise, return false. 
+// Use the `Array.prototype.myEach` method you defined above. Do NOT call the
+// built-in `Array.prototype.some` or `Array.prototype.forEach` methods.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+// Write an `Array.prototype.myFilter(callback)` that takes a callback and
+// returns a new array which includes every element for which the callback 
+// returned true. Use the `Array.prototype.myEach` method you defined above. Do 
+// NOT call the built-in `Array.prototype.filter` or `Array.prototype.forEach` 
+// methods.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+
+
+// Write an `Array.prototype.myReduce(callback, acc)` method which takes a
+// callback and an optional argument of a default accumulator. If myReduce only 
+// receives one argument, then use the first element of the array as the default 
+// accumulator. Use the `Array.prototype.myEach` method you defined above. Do 
+// NOT call in the built-in `Array.prototype.reduce` or `Array.prototype.forEach` 
+// methods.
+
+
