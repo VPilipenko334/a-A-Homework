@@ -46,14 +46,6 @@ function titleize(str) {
 // a boolean indicating whether or not the words are anagrams. Anagrams are 
 // words that contain the same characters but not necessarily in the same order. 
 // Solve this without using Array.prototype.sort.
-// 
-// Examples:
-// anagrams('listen', 'silent') => true
-// anagrams('listen', 'potato') => false
-
-
-// returns a boolean 
-// they contain the same chars but not in the same order 
 
 
 // 1. create a variable and equal it to true
